@@ -39,7 +39,7 @@ async function Page() {
                 name={person.name}
                 username={person.username}
                 imageUrl={person.image}
-                personType="Use"
+                personType="User"
               />
             ))}
           </>

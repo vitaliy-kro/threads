@@ -1,7 +1,10 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import * as z from 'zod';
+import { useForm } from 'react-hook-form';
 import {
   Form,
   FormControl,
@@ -11,11 +14,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CommentValidation } from '@/lib/validations/thread';
-import Image from 'next/image';
 import { addCommentToThread } from '@/lib/actions/thread.actions';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 interface Props {
   threadId: string;
@@ -23,8 +25,8 @@ interface Props {
   currentUserId: string;
 }
 function Comment({ threadId, currentUserImg, currentUserId }: Props) {
-  const router = useRouter();
   const pathname = usePathname();
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(CommentValidation),
@@ -34,13 +36,14 @@ function Comment({ threadId, currentUserImg, currentUserId }: Props) {
   });
 
   const onSubmit = async (values: z.infer<typeof CommentValidation>) => {
+    setIsSubmitted(true);
     await addCommentToThread({
       threadId,
       commentText: values.thread,
       userId: JSON.parse(currentUserId),
       path: pathname,
     });
-
+    setIsSubmitted(false);
     form.reset();
   };
 
@@ -72,8 +75,13 @@ function Comment({ threadId, currentUserImg, currentUserId }: Props) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="comment-form_btn">
-          Reply
+        <Button
+          type="submit"
+          className="comment-form_btn"
+          disabled={isSubmitted}
+        >
+          {isSubmitted && <LoadingSpinner />}
+          {isSubmitted ? 'Replying...' : 'Reply'}
         </Button>
       </form>
     </Form>

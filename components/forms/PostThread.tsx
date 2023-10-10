@@ -17,10 +17,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { createThread } from '@/lib/actions/thread.actions';
 import { useOrganization } from '@clerk/nextjs';
+import { useState } from 'react';
+import Image from 'next/image';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 function PostThread({ userId }: { userId: string }) {
   const router = useRouter();
   const pathname = usePathname();
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const { organization } = useOrganization();
 
@@ -33,14 +37,16 @@ function PostThread({ userId }: { userId: string }) {
   });
 
   const onSubmit = async (values: z.infer<typeof ThreadValidation>) => {
+    setIsSubmitted(true);
     await createThread({
       text: values.thread,
       author: userId,
       communityId: organization ? organization.id : null,
       path: pathname,
     });
-
+    form.reset();
     router.push('/');
+    setIsSubmitted(false);
   };
 
   return (
@@ -68,8 +74,9 @@ function PostThread({ userId }: { userId: string }) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="bg-primary-500">
-          Post Thread
+        <Button type="submit" className="bg-primary-500" disabled={isSubmitted}>
+          {isSubmitted && <LoadingSpinner />}
+          {isSubmitted ? 'Your thread posing...' : 'Post Thread'}
         </Button>
       </form>
     </Form>

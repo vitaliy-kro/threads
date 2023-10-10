@@ -21,6 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { isBase64Image } from '@/lib/utils';
 import { useUploadThing } from '@/lib/uploadthing';
 import { updateUser } from '@/lib/actions/user.actions';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 interface Props {
   user: {
@@ -36,6 +37,8 @@ interface Props {
 
 function AccountProfile({ user, btnTitle }: Props) {
   const [files, setFiles] = useState<File[]>([]);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const { startUpload } = useUploadThing('media');
   const router = useRouter();
   const pathname = usePathname();
@@ -90,6 +93,7 @@ function AccountProfile({ user, btnTitle }: Props) {
       }
     }
 
+    setIsSubmitted(true);
     await updateUser({
       name: values.name,
       username: values.username,
@@ -98,7 +102,7 @@ function AccountProfile({ user, btnTitle }: Props) {
       userId: user.id,
       path: pathname,
     });
-
+    setIsSubmitted(false);
     if (pathname === '/profile/edit') {
       return router.back();
     }
@@ -206,8 +210,9 @@ function AccountProfile({ user, btnTitle }: Props) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="bg-primary-500">
-          {btnTitle}
+        <Button type="submit" className="bg-primary-500" disabled={isSubmitted}>
+          {isSubmitted && <LoadingSpinner />}
+          {isSubmitted ? 'Submitting...' : btnTitle}
         </Button>
       </form>
     </Form>

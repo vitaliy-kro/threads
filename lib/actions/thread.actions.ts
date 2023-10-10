@@ -98,6 +98,37 @@ async function fetchAllChildThreads(threadId: string): Promise<any[]> {
   return descendantThreads;
 }
 
+export async function likeThread({
+  threadId,
+  accountId,
+  path,
+}: {
+  threadId: string;
+  accountId: string;
+  path: string;
+}) {
+  try {
+    await connectToDB();
+
+    const user = await User.findOne({ id: accountId });
+
+    console.log({ user });
+    const isLikedRecently = user.likedPosts.includes(threadId);
+
+    if (isLikedRecently) {
+      const updatedLikedPosts = user.likedPosts.filter(
+        (id: string) => id !== threadId
+      );
+      user.likedPosts = updatedLikedPosts;
+    } else {
+      user.likedPosts.push(threadId);
+    }
+    user.save();
+    revalidatePath(path);
+  } catch (error: any) {
+    throw new Error(`Failed to create thread: ${error.message}`);
+  }
+}
 export async function deleteThread(id: string, path: string): Promise<void> {
   try {
     await connectToDB();

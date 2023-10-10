@@ -6,6 +6,12 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   image: String,
   bio: String,
+  likedPosts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Thread',
+    },
+  ],
   threads: [
     {
       type: mongoose.Schema.Types.ObjectId,

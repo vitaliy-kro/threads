@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { formatDateString } from '@/lib/utils';
 
 import DeleteThread from '@/components/forms/DeleteThread';
+import LikeThread from '@/components/forms/LikeThread';
 
 interface Props {
   id: string;
@@ -70,13 +71,7 @@ function ThreadCard({
 
             <div className={`${isComment && 'mb-10'} mt-5 flex flex-col gap-3`}>
               <div className="flex gap-3.5">
-                <Image
-                  src="/assets/heart-gray.svg"
-                  alt="heart"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
-                />
+                {/*<LikeThread threadId={id} currentUserId={currentUserId} />*/}
                 <Link href={`/thread/${id}`}>
                   <Image
                     src="/assets/reply.svg"
@@ -86,13 +81,13 @@ function ThreadCard({
                     className="cursor-pointer object-contain"
                   />
                 </Link>
-                <Image
-                  src="/assets/repost.svg"
-                  alt="repost"
-                  width={24}
-                  height={24}
-                  className="cursor-pointer object-contain"
-                />
+                {/*<Image*/}
+                {/*  src="/assets/repost.svg"*/}
+                {/*  alt="repost"*/}
+                {/*  width={24}*/}
+                {/*  height={24}*/}
+                {/*  className="cursor-pointer object-contain"*/}
+                {/*/>*/}
               </div>
 
               {isComment && comments.length > 0 && (

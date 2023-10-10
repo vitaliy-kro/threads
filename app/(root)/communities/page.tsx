@@ -1,6 +1,7 @@
-import { currentUser } from '@clerk/nextjs';
-import { fetchUser, fetchUsers } from '@/lib/actions/user.actions';
 import { redirect } from 'next/navigation';
+import { currentUser } from '@clerk/nextjs';
+
+import { fetchUser } from '@/lib/actions/user.actions';
 import { fetchCommunities } from '@/lib/actions/community.actions';
 
 import Searchbar from '@/components/shared/Searchbar';

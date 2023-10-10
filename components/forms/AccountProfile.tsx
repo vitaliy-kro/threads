@@ -207,7 +207,7 @@ function AccountProfile({ user, btnTitle }: Props) {
           )}
         />
         <Button type="submit" className="bg-primary-500">
-          Submit
+          {btnTitle}
         </Button>
       </form>
     </Form>

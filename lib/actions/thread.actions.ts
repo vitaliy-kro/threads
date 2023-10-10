@@ -129,10 +129,8 @@ export async function deleteThread(id: string, path: string): Promise<void> {
       ].filter(id => id !== undefined)
     );
 
-    //
     await Thread.deleteMany({ _id: { $in: descendantThreadIds } });
 
-    // Update User model
     await User.updateMany(
       { _id: { $in: Array.from(uniqueAuthorIds) } },
       { $pull: { threads: { $in: descendantThreadIds } } }

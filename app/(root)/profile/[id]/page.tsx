@@ -63,6 +63,7 @@ async function Page({ params }: { params: { id: string } }) {
                 currentUserId={user.id}
                 accountId={userInfo.id}
                 accountType="User"
+                userInfo={userInfo}
               />
             </TabsContent>
           ))}

@@ -27,6 +27,7 @@ interface Props {
     };
   }[];
   isComment?: boolean;
+  isLiked: boolean;
 }
 function ThreadCard({
   id,
@@ -38,6 +39,7 @@ function ThreadCard({
   createdAt,
   comments,
   isComment,
+  isLiked,
 }: Props) {
   return (
     <article
@@ -71,7 +73,11 @@ function ThreadCard({
 
             <div className={`${isComment && 'mb-10'} mt-5 flex flex-col gap-3`}>
               <div className="flex gap-3.5">
-                {/*<LikeThread threadId={id} currentUserId={currentUserId} />*/}
+                <LikeThread
+                  threadId={JSON.stringify(id)}
+                  currentUserId={currentUserId}
+                  isLiked={isLiked}
+                />
                 <Link href={`/thread/${id}`}>
                   <Image
                     src="/assets/reply.svg"

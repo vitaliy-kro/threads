@@ -17,6 +17,7 @@ async function Page({ params }: { params: { id: string } }) {
   if (!userInfo?.onboarded) redirect('/onboarding');
 
   const thread = await fetchThreadById(params.id);
+  const isLiked = userInfo.likedPosts.includes(thread._id);
 
   return (
     <section className="relative">
@@ -31,6 +32,7 @@ async function Page({ params }: { params: { id: string } }) {
           community={thread.community}
           createdAt={thread.createdAt}
           comments={thread.children}
+          isLiked={isLiked}
         />
       </div>
 
@@ -43,20 +45,24 @@ async function Page({ params }: { params: { id: string } }) {
       </div>
 
       <div className="mt-10">
-        {thread.children.map((childItem: any) => (
-          <ThreadCard
-            key={childItem._id}
-            id={childItem._id}
-            currentUserId={user?.id || ''}
-            parentId={childItem.parentId}
-            content={childItem.text}
-            author={childItem.author}
-            community={childItem.community}
-            createdAt={childItem.createdAt}
-            comments={childItem.children}
-            isComment
-          />
-        ))}
+        {thread.children.map((childItem: any) => {
+          const isLikedComment = userInfo.likedPosts.includes(childItem._id);
+          return (
+            <ThreadCard
+              key={childItem._id}
+              id={childItem._id}
+              currentUserId={user?.id || ''}
+              parentId={childItem.parentId}
+              content={childItem.text}
+              author={childItem.author}
+              community={childItem.community}
+              createdAt={childItem.createdAt}
+              comments={childItem.children}
+              isComment
+              isLiked={isLikedComment}
+            />
+          );
+        })}
       </div>
     </section>
   );

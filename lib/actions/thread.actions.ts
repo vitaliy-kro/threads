@@ -1,5 +1,6 @@
 'use server';
 
+import { ObjectId } from 'mongoose';
 import { connectToDB } from '@/lib/mongoose';
 import { revalidatePath } from 'next/cache';
 import Thread from '@/lib/models/thread.model';
@@ -112,13 +113,13 @@ export async function likeThread({
 
     const user = await User.findOne({ id: accountId });
 
-    console.log({ user });
     const isLikedRecently = user.likedPosts.includes(threadId);
 
     if (isLikedRecently) {
       const updatedLikedPosts = user.likedPosts.filter(
-        (id: string) => id !== threadId
+        (id: ObjectId) => id.toString() !== threadId
       );
+
       user.likedPosts = updatedLikedPosts;
     } else {
       user.likedPosts.push(threadId);
@@ -129,6 +130,7 @@ export async function likeThread({
     throw new Error(`Failed to create thread: ${error.message}`);
   }
 }
+
 export async function deleteThread(id: string, path: string): Promise<void> {
   try {
     await connectToDB();

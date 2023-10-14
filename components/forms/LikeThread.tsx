@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 import { likeThread } from '@/lib/actions/thread.actions';
 
@@ -14,10 +14,12 @@ interface Props {
 
 function LikeThread({ threadId, currentUserId, isLiked }: Props) {
   const pathname = usePathname();
+  const [isThreadLiked, setIsThreadLiked] = useState(isLiked);
   const [isLikeClicked, setIsLikeClicked] = useState(false);
 
   const onSubmit = async () => {
     setIsLikeClicked(true);
+    setIsThreadLiked(prev => !prev);
     await likeThread({
       threadId: JSON.parse(threadId),
       accountId: currentUserId,
@@ -28,12 +30,14 @@ function LikeThread({ threadId, currentUserId, isLiked }: Props) {
 
   return (
     <Image
-      src={isLiked ? '/assets/heart-filled.svg' : '/assets/heart-gray.svg'}
+      src={
+        isThreadLiked ? '/assets/heart-filled.svg' : '/assets/heart-gray.svg'
+      }
       alt="like"
       width={24}
       height={24}
       className={`cursor-pointer object-contain transition-all ${
-        isLiked ? 'scale-125' : 'scale-100'
+        isLikeClicked ? 'scale-125' : 'scale-100'
       }`}
       onClick={onSubmit}
     />
